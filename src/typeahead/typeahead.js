@@ -79,7 +79,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       });
 
       //safe digest will run only if digest-apply loop is not running already
-      var safeDigest = function {
+      var safeDigest = function() {
         if (!scope.$$phase) {
           scope.$digest();
         }
