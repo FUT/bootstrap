@@ -78,6 +78,13 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
         scope.$destroy();
       });
 
+      //safe digest will run only if digest-apply loop is not running already
+      var safeDigest = function {
+        if (!scope.$$phase) {
+          scope.$digest();
+        }
+      };
+
       // WAI-ARIA
       var popupId = 'typeahead-' + scope.$id + '-' + Math.floor(Math.random() * 10000);
       element.attr({
@@ -283,11 +290,11 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
 
         if (evt.which === 40) {
           scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
-          scope.$digest();
+          safeDigest();
 
         } else if (evt.which === 38) {
           scope.activeIdx = (scope.activeIdx > 0 ? scope.activeIdx : scope.matches.length) - 1;
-          scope.$digest();
+          safeDigest();
 
         } else if (evt.which === 13 || evt.which === 9) {
           scope.$apply(function () {
@@ -298,7 +305,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
           evt.stopPropagation();
 
           resetMatches();
-          scope.$digest();
+          safeDigest();
         }
       });
 
@@ -310,7 +317,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
       var dismissClickHandler = function (evt) {
         if (element[0] !== evt.target) {
           resetMatches();
-          scope.$digest();
+          safeDigest();
         }
       };
 
